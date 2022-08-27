@@ -25,6 +25,6 @@ describe('Manager class', () => {
         expect(manager.getRole()).toEqual('Manager'); 
     }),
     it('gets the officeNumber', () => {
-        expect(manager.getGithub()).toEqual(1); 
+        expect(manager.getOfficeNumber()).toEqual(1); 
     })
 });
