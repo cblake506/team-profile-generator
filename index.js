@@ -17,10 +17,13 @@ const inquireEmployeeBasics = () => {
         switch(answers.role){
             case "Manager":
                 return inquireManager();
+                break;
             case "Engineer":
                 return inquireEngineer();
+                break;
             case "Intern":
                 return inquireIntern();
+                break;
             default:
                 console.log("error defining role");
         }
@@ -66,7 +69,7 @@ const init = () => {
   inquireEmployeeBasics()
     
     // Use writeFileSync method to use promises instead of a callback function
-    .then((generateHtml) => fs.writeFileSync('./dist/index.html', generateHtml))
+    .then((generateHtml) => fs.writeFileSync('./dist/index.html', `${generateHtml} ${endHtml}`))
     .then(() => console.log('Successfully wrote to index.html'))
     .catch((err) => console.error(err));
 };
