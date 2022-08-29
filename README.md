@@ -1,5 +1,5 @@
 # team-profile-generator
-Use the terminal to set up a webpage using including employees and links to their email or github pages based on their role.
+Use the terminal to set up a webpage using employees and links to their email or github pages based on their role.
 
 Uses npm iquirer for prompts and jest for tests.
 
