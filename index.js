@@ -1,5 +1,7 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
+const {inquireManager, inquireEngineer, inquireIntern} = require('./lib/employeeQuestions');
+const {addEmployeeCol} = require('./lib/addEmployeeCol');
 
 const inquireEmployeeBasics = () => {
     return inquirer
@@ -9,26 +11,28 @@ const inquireEmployeeBasics = () => {
             name: 'role',
             choices: ["Manager", "Engineer", "Intern"],
             message: 'What is the role of the employee?',
-        },
-        {
-            type: 'input',
-            name: 'id',
-            message: 'What is the id of the employee?',
-        },
-        {
-            type: 'input',
-            name: 'email',
-            message: 'What is the email of the employee?',
         }
     ])
     .then((answers) => {
-        // const newEmployee = new Employee(answers);
+        switch(answers.role){
+            case "Manager":
+                return inquireManager();
+            case "Engineer":
+                return inquireEngineer();
+            case "Intern":
+                return inquireIntern();
+            default:
+                console.log("error defining role");
+        }
+    })
+    .then((newEmployee) => {
+        return addEmployeeCol(startHtml, newEmployee)
     });
 }
 
 
 
-const generateHTML = () =>
+const startHtml = 
   `<!DOCTYPE html>
   <html lang="en">
   <head>
@@ -48,9 +52,9 @@ const generateHTML = () =>
   
         <div class="container">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+`
 
-
-
+const endHtml = `
         </div>
   </div>
   </div>
@@ -60,26 +64,11 @@ const generateHTML = () =>
 // Bonus using writeFileSync as a promise
 const init = () => {
   inquireEmployeeBasics()
+    
     // Use writeFileSync method to use promises instead of a callback function
-    .then(() => fs.writeFileSync('index.html', generateHTML()))
+    .then((generateHtml) => fs.writeFileSync('./dist/index.html', generateHtml))
     .then(() => console.log('Successfully wrote to index.html'))
     .catch((err) => console.error(err));
 };
 
 init();
-
-const addEmployeeCol = (start, name, role, id, email, special) => {
-    return `${start}
-    <div class="col">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <h2 class="card-text">${name}</h2>
-                <h2 class="card-text">${role}</h2>
-                <p class="card-text">ID: ${id}</p>
-                <p class="card-text">Email: ${email}</p>
-                <p class="card-text">${special}</p>
-            </div>
-        </div>
-    </div>
-    `
-}
