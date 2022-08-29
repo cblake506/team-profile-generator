@@ -2,6 +2,7 @@ const inquirer = require('inquirer');
 const fs = require('fs');
 const {inquireManager, inquireEngineer, inquireIntern} = require('./lib/employeeQuestions');
 const {addEmployeeCol} = require('./lib/addEmployeeCol');
+const { start } = require('repl');
 
 const inquireEmployeeBasics = () => {
     return inquirer
@@ -9,7 +10,7 @@ const inquireEmployeeBasics = () => {
         {
             type: 'list',
             name: 'role',
-            choices: ["Manager", "Engineer", "Intern"],
+            choices: ["Manager", "Engineer", "Intern", "Exit (Done adding employees)"],
             message: 'What is the role of the employee?',
         }
     ])
@@ -25,17 +26,22 @@ const inquireEmployeeBasics = () => {
                 return inquireIntern();
                 break;
             default:
-                console.log("error defining role");
+                console.log("Goodbye");
+                return false;
         }
     })
     .then((newEmployee) => {
-        return addEmployeeCol(startHtml, newEmployee)
+        if(newEmployee){
+            startHtml = addEmployeeCol(startHtml, newEmployee)
+            return inquireEmployeeBasics();
+        }
+        return;
     });
 }
 
 
 
-const startHtml = 
+var startHtml = 
   `<!DOCTYPE html>
   <html lang="en">
   <head>
@@ -64,12 +70,10 @@ const endHtml = `
 </body>
 </html>`;
 
-// Bonus using writeFileSync as a promise
+
 const init = () => {
   inquireEmployeeBasics()
-    
-    // Use writeFileSync method to use promises instead of a callback function
-    .then((generateHtml) => fs.writeFileSync('./dist/index.html', `${generateHtml} ${endHtml}`))
+    .then(() => fs.writeFileSync('./dist/index.html', `${startHtml} ${endHtml}`))
     .then(() => console.log('Successfully wrote to index.html'))
     .catch((err) => console.error(err));
 };
